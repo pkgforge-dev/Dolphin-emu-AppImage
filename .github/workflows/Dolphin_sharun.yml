@@ -60,8 +60,7 @@ jobs:
 
       - name: Install debloated llvm-libs
         run: |
-          LLVM="$(wget https://api.github.com/repos/Samueru-sama/llvm-libs-debloated/releases -O - \
-            | sed 's/[()",{} ]/\n/g' | grep -oi "https.*minimal.pkg.tar.zst$" | head -1)"
+          LLVM="https://github.com/pkgforge-dev/llvm-libs-debloated/releases/download/continuous/llvm-libs-mini-x86_64.pkg.tar.zst"
           wget "$LLVM" -O ./llvm-libs.pkg.tar.zst
           pacman -U --noconfirm ./llvm-libs.pkg.tar.zst
 
