@@ -8,9 +8,7 @@ APPIMAGETOOL="https://github.com/AppImage/appimagetool/releases/download/continu
 LIB4BN="https://raw.githubusercontent.com/VHSgunzo/sharun/refs/heads/main/lib4bin"
 #DESKTOP="https://raw.githubusercontent.com/dolphin-emu/dolphin/refs/heads/master/Data/dolphin-emu.desktop" # This is insanely outdated lmao
 ICON="https://github.com/dolphin-emu/dolphin/blob/master/Data/dolphin-emu.png?raw=true"
-UPINFO="gh-releases-zsync|$(echo "$GITHUB_REPOSITORY" | tr '/' '|')|latest|*$ARCH.AppImage.zsync"
-URUNTIME=$(wget -q https://api.github.com/repos/VHSgunzo/uruntime/releases -O - \
-	| sed 's/[()",{} ]/\n/g' | grep -oi "https.*appimage.*dwarfs.*$ARCH$" | head -1)
+URUNTIME="https://github.com/VHSgunzo/uruntime/releases/latest/download/uruntime-appimage-dwarfs-$ARCH"
 
 # Prepare AppDir
 mkdir -p ./AppDir && cd ./AppDir
@@ -73,6 +71,7 @@ wget -q "$URUNTIME" -O ./uruntime
 chmod +x ./uruntime
 
 #Add udpate info to runtime
+UPINFO="gh-releases-zsync|$(echo "$GITHUB_REPOSITORY" | tr '/' '|')|latest|*dwarfs-$ARCH.AppImage.zsync"
 echo "Adding update information \"$UPINFO\" to runtime..."
 printf "$UPINFO" > data.upd_info
 llvm-objcopy --update-section=.upd_info=data.upd_info \
@@ -91,6 +90,7 @@ echo "Generating zsync file..."
 zsyncmake *.AppImage -u *.AppImage
 
 # dolphin (the file manager) had to ruin the fun for everyone 😭
+UPINFO="gh-releases-zsync|$(echo "$GITHUB_REPOSITORY" | tr '/' '|')|latest|*squashfs-$ARCH.AppImage.zsync"
 wget --retry-connrefused --tries=30 "$APPIMAGETOOL" -O ./appimagetool
 chmod +x ./appimagetool
 ./appimagetool --comp zstd \
