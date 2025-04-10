@@ -80,7 +80,7 @@ jobs:
           git clone https://github.com/dolphin-emu/dolphin.git dolphin
           ( cd dolphin && mkdir build && cd build
             git submodule update --init --recursive
-            cmake .. -DLINUX_LOCAL_DEV=true
+            cmake .. -DLINUX_LOCAL_DEV=true -DCMAKE_POLICY_VERSION_MINIMUM=3.5
             make -j $(nproc)
             sudo make install
             sudo cp -r ../Data/Sys /usr/local/bin
