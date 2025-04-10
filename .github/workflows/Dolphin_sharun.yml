@@ -56,7 +56,8 @@ jobs:
             pulseaudio \
             pulseaudio-alsa \
             pipewire-audio \
-            qt6ct
+            qt6ct \
+            gtk3
 
       - name: Install debloated llvm-libs
         run: |
