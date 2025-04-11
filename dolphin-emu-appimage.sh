@@ -32,7 +32,7 @@ ln -s dolphin-emu.png ./.DirIcon
 # Bundle all libs
 wget --retry-connrefused --tries=30 "$LIB4BN" -O ./lib4bin
 chmod +x ./lib4bin
-xvfb-run -a -- ./lib4bin -p -v -e -s -k -r \
+xvfb-run -a -- ./lib4bin -p -v -e -s -k \
 	/usr/local/bin/dolphin-* \
 	/usr/lib/libGLX* \
 	/usr/lib/libEGL* \
@@ -49,8 +49,7 @@ xvfb-run -a -- ./lib4bin -p -v -e -s -k -r \
 	/usr/lib/spa-0.2/*/* \
 	/usr/lib/alsa-lib/*
 
-# WE NEED TO PATCH RPATH IN LIBC.SO.6 BUT NOT IN GCONV
-# WTF IS THIS MESS
+# something is breaking gconv when bundled directly, likely strip not sure
 cp -rv /usr/lib/gconv ./shared/lib
 
 # copy locales, the dolphin binary expects them here
