@@ -34,7 +34,6 @@ wget --retry-connrefused --tries=30 "$LIB4BN" -O ./lib4bin
 chmod +x ./lib4bin
 xvfb-run -a -- ./lib4bin -p -v -e -s -k -r \
 	/usr/local/bin/dolphin-* \
-	/usr/lib/gconv/* \
 	/usr/lib/libGLX* \
 	/usr/lib/libEGL* \
 	/usr/lib/dri/* \
@@ -49,6 +48,10 @@ xvfb-run -a -- ./lib4bin -p -v -e -s -k -r \
 	/usr/lib/pipewire-0.3/* \
 	/usr/lib/spa-0.2/*/* \
 	/usr/lib/alsa-lib/*
+
+# WE NEED TO PATCH RPATH IN LIBC.SO.6 BUT NOT IN GCONV
+# WTF IS THIS MESS
+cp -rv /usr/lib/gconv ./shared/lib
 
 # copy locales, the dolphin binary expects them here
 mkdir -p ./Source/Core
