@@ -32,7 +32,7 @@ ln -s dolphin-emu.png ./.DirIcon
 # Bundle all libs
 wget --retry-connrefused --tries=30 "$LIB4BN" -O ./lib4bin
 chmod +x ./lib4bin
-xvfb-run -a -- ./lib4bin -p -v -r -e -s -k \
+xvfb-run -a -- ./lib4bin -p -v -e -s -k \
 	/usr/local/bin/dolphin-* \
 	/usr/lib/gconv/* \
 	/usr/lib/libGLX* \
