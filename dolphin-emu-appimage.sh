@@ -34,6 +34,7 @@ wget --retry-connrefused --tries=30 "$LIB4BN" -O ./lib4bin
 chmod +x ./lib4bin
 xvfb-run -a -- ./lib4bin -p -v -e -s -k \
 	/usr/local/bin/dolphin-* \
+	/usr/lib/gconv/* \
 	/usr/lib/libGLX* \
 	/usr/lib/libEGL* \
 	/usr/lib/dri/* \
@@ -49,8 +50,8 @@ xvfb-run -a -- ./lib4bin -p -v -e -s -k \
 	/usr/lib/spa-0.2/*/* \
 	/usr/lib/alsa-lib/*
 
-# something is breaking gconv when bundled directly, likely strip not sure
-cp -rv /usr/lib/gconv ./shared/lib
+# gconv-modules is also needed
+cp -vn /usr/lib/gconv/gconv-modules ./shared/lib/gconv
 
 # copy locales, the dolphin binary expects them here
 mkdir -p ./Source/Core
