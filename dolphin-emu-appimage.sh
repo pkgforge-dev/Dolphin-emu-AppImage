@@ -32,8 +32,9 @@ ln -s dolphin-emu.png ./.DirIcon
 # Bundle all libs
 wget --retry-connrefused --tries=30 "$LIB4BN" -O ./lib4bin
 chmod +x ./lib4bin
-xvfb-run -a -- ./lib4bin -p -v -r -e -s -k \
+xvfb-run -a -- ./lib4bin -p -v -e -s -k \
 	/usr/local/bin/dolphin-* \
+	/usr/lib/gconv/* \
 	/usr/lib/libGLX* \
 	/usr/lib/libEGL* \
 	/usr/lib/dri/* \
@@ -45,10 +46,12 @@ xvfb-run -a -- ./lib4bin -p -v -r -e -s -k \
 	/usr/lib/qt6/plugins/styles/* \
 	/usr/lib/qt6/plugins/xcbglintegrations/* \
 	/usr/lib/qt6/plugins/wayland-*/* \
-	/usr/lib/gio/modules/* \
 	/usr/lib/pipewire-0.3/* \
 	/usr/lib/spa-0.2/*/* \
 	/usr/lib/alsa-lib/*
+
+# gconv-modules is also needed
+cp -vn /usr/lib/gconv/gconv-modules ./shared/lib/gconv
 
 # copy locales, the dolphin binary expects them here
 mkdir -p ./Source/Core
