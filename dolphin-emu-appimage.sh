@@ -34,6 +34,7 @@ wget --retry-connrefused --tries=30 "$LIB4BN" -O ./lib4bin
 chmod +x ./lib4bin
 xvfb-run -a -- ./lib4bin -p -v -r -e -s -k \
 	/usr/local/bin/dolphin-* \
+	/usr/lib/gconv/* \
 	/usr/lib/libGLX* \
 	/usr/lib/libEGL* \
 	/usr/lib/dri/* \
