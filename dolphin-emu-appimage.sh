@@ -50,9 +50,6 @@ xvfb-run -a -- ./lib4bin -p -v -e -s -k \
 	/usr/lib/spa-0.2/*/* \
 	/usr/lib/alsa-lib/*
 
-# gconv-modules is also needed
-cp -vn /usr/lib/gconv/gconv-modules ./shared/lib/gconv
-
 # copy locales, the dolphin binary expects them here
 mkdir -p ./Source/Core
 cp -r /usr/local/bin/DolphinQt ./Source/Core
