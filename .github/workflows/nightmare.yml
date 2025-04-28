@@ -1,5 +1,10 @@
 # This is a basic workflow to help you get started with Actions
 
+# THIS FILE WAS KEPT AROUND TO SHOW HOW TERRIBLE IT IS TO BUILD ANYTHING ON DEBIAN/UBUNTU
+# THIS FILE WAS KEPT AROUND TO SHOW HOW TERRIBLE IT IS TO BUILD ANYTHING ON DEBIAN/UBUNTU
+# THIS FILE WAS KEPT AROUND TO SHOW HOW TERRIBLE IT IS TO BUILD ANYTHING ON DEBIAN/UBUNTU
+# It is not used anymore for plenty of reasons
+
 name: CI
 
 # Controls when the action will run. 
