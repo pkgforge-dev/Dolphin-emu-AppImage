@@ -68,16 +68,13 @@ echo "$VERSION" > ~/version
 
 # MAKE APPIMAGE WITH URUNTIME
 cd ..
-wget -q "$URUNTIME" -O ./uruntime
+wget --retry-connrefused --tries=30 "$URUNTIME" -O ./uruntime
 chmod +x ./uruntime
 
 #Add udpate info to runtime
 UPINFO="gh-releases-zsync|$(echo "$GITHUB_REPOSITORY" | tr '/' '|')|latest|*dwarfs-$ARCH.AppImage.zsync"
 echo "Adding update information \"$UPINFO\" to runtime..."
-printf "$UPINFO" > data.upd_info
-llvm-objcopy --update-section=.upd_info=data.upd_info \
-	--set-section-flags=.upd_info=noload,readonly ./uruntime
-printf 'AI\x02' | dd of=./uruntime bs=1 count=3 seek=8 conv=notrunc
+./uruntime --appimage-addupdinfo "$UPINFO"
 
 echo "Generating AppImage..."
 ./uruntime --appimage-mkdwarfs -f \
