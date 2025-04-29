@@ -38,7 +38,6 @@ jobs:
             wget \
             git \
             artix-archlinux-support \
-            llvm \
             mesa \
             xorg-server-xvfb \
             vulkan-radeon \
