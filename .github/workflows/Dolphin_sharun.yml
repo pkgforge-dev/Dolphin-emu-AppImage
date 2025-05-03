@@ -27,51 +27,8 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
 
-      - name: Prerequisites
-        run: |
-          sed -i 's/DownloadUser/#DownloadUser/g' /etc/pacman.conf
-          pacman -Syu --noconfirm base-devel \
-            cmake \
-            strace \
-            patchelf \
-            curl \
-            wget \
-            git \
-            artix-archlinux-support \
-            mesa \
-            xorg-server-xvfb \
-            vulkan-radeon \
-            vulkan-intel \
-            vulkan-nouveau
-
-          pacman-key --init && pacman-key --populate archlinux
-          printf "\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n" | tee -a /etc/pacman.conf
-
-          cat /etc/pacman.conf
-          sudo sed -i 's/NoExtract/#NoExtract/g' /etc/pacman.conf
-
-          pacman -Syu --noconfirm zsync \
-            dolphin-emu \
-            pulseaudio \
-            pulseaudio-alsa \
-            pipewire-audio \
-            qt6ct
-
-      - name: Install debloated llvm-libs
-        run: |
-          LLVM_URL="https://github.com/pkgforge-dev/llvm-libs-debloated/releases/download/continuous/llvm-libs-mini-x86_64.pkg.tar.zst"
-          wget "$LLVM_URL" -O ./llvm-libs.pkg.tar.zst
-          pacman -U --noconfirm ./llvm-libs.pkg.tar.zst
-          rm -f ./llvm-libs.pkg.tar.zst
-
-      - name: Install iculess libxml2 and qt6-core
-        run: |
-          QT6_URL="https://github.com/pkgforge-dev/llvm-libs-debloated/releases/download/continuous/qt6-base-iculess-x86_64.pkg.tar.zst"
-          LIBXML_URL="https://github.com/pkgforge-dev/llvm-libs-debloated/releases/download/continuous/libxml2-iculess-x86_64.pkg.tar.zst"
-          wget "$QT6_URL" -O ./qt6-base-iculess.pkg.tar.zst
-          wget "$LIBXML_URL" -O ./libxml2-iculess.pkg.tar.zst
-          pacman -U --noconfirm ./qt6-base-iculess.pkg.tar.zst ./libxml2-iculess.pkg.tar.zst
-          rm -f ./qt6-base-iculess.pkg.tar.zst ./libxml2-iculess.pkg.tar.zst
+      - name: Get dependencies
+        run: chmod +x ./get-dependencies.sh && ./get-dependencies.sh
 
       # Runs a set of commands using the runners shell
       - name: Build Dolphin
