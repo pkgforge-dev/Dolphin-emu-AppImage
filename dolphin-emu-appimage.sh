@@ -1,14 +1,46 @@
 #/bin/sh
 
-set -eux
+set -ex
 
 export APPIMAGE_EXTRACT_AND_RUN=1
 export ARCH="$(uname -m)"
 APPIMAGETOOL="https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-$ARCH.AppImage"
 LIB4BN="https://raw.githubusercontent.com/VHSgunzo/sharun/refs/heads/main/lib4bin"
-#DESKTOP="https://raw.githubusercontent.com/dolphin-emu/dolphin/refs/heads/master/Data/dolphin-emu.desktop" # This is insanely outdated lmao
 ICON="https://github.com/dolphin-emu/dolphin/blob/master/Data/dolphin-emu.png?raw=true"
 URUNTIME="https://github.com/VHSgunzo/uruntime/releases/latest/download/uruntime-appimage-dwarfs-$ARCH"
+UPINFO="gh-releases-zsync|$(echo "$GITHUB_REPOSITORY" | tr '/' '|')|latest|*dwarfs-$ARCH.AppImage.zsync"
+REPO="https://github.com/dolphin-emu/dolphin.git"
+
+# Determine to build nightly or stable
+if [ "$DEVEL" = 'true' ]; then
+	echo "Making nightly build of dolphin-emu..."
+	VERSION="$(git ls-remote "$REPO" HEAD | cut -c 1-9 | head -1)"
+	#UPINFO="$(echo "$UPINFO" | sed 's|latest|nightly|')"
+	git clone "$REPO" ./dolphin
+else
+	echo "Making stable build of dolphin-emu..."
+	wget "$GRON" -O ./gron.awk
+	chmod +x ./gron.awk
+	VERSION=$(wget https://api.github.com/repos/dolphin-emu/dolphin/tags -O - \
+		| ./gron.awk | grep -v "nJoy" |awk -F'=|"' '/name/ {print $3; exit}')
+	git clone --branch "$VERSION" --single-branch "$REPO" ./dolphin
+fi
+echo "$VERSION" > ~/version
+
+# BUILD DOLPHIN
+(
+	cd ./dolphin 
+	mkdir ./build 
+	cd ./build
+
+	git submodule update --init --recursive
+	cmake .. -DLINUX_LOCAL_DEV=true -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+	make -j $(nproc)
+	sudo make install
+
+	sudo cp -r ../Data/Sys /usr/local/bin
+	sudo cp -r ./Source/Core/DolphinQt /usr/local/bin
+  )
 
 # Prepare AppDir
 mkdir -p ./AppDir
@@ -24,11 +56,10 @@ Categories=Game;Emulator;
 Name=Dolphin Emulator
 GenericName=Wii/GameCube Emulator
 StartupWMClass=dolphin-emu
-Comment=A Wii/GameCube Emulator
-X-AppImage-Version=5.0-16793' > ./dolphin-emu.desktop
+Comment=A Wii/GameCube Emulator' > ./dolphin-emu.desktop
 
-wget --retry-connrefused --tries=30 "$ICON" -O ./dolphin-emu.png
-ln -s dolphin-emu.png ./.DirIcon
+cp -v /usr/local/share/icons/hicolor/256x256/apps/dolphin-emu.png  ./
+cp -v /usr/local/share/icons/hicolor/256x256/apps/dolphin-emu.png  ./.DirIcon
 
 # Bundle all libs
 wget --retry-connrefused --tries=30 "$LIB4BN" -O ./lib4bin
@@ -63,10 +94,6 @@ cp -rv /usr/local/bin/Sys ./bin/Sys
 ln ./sharun ./AppRun
 ./sharun -g
 
-# get version from dolphin
-export VERSION="$(xvfb-run -a -- ./AppRun --version 2>/dev/null | awk 'NR==1 {print $2; exit}')"
-echo "$VERSION" > ~/version
-
 # MAKE APPIMAGE WITH URUNTIME
 cd ..
 wget --retry-connrefused --tries=30 "$URUNTIME" -O ./uruntime
@@ -74,7 +101,6 @@ wget --retry-connrefused --tries=30 "$URUNTIME_LITE" -O ./uruntime-lite
 chmod +x ./uruntime*
 
 #Add udpate info to runtime
-UPINFO="gh-releases-zsync|$(echo "$GITHUB_REPOSITORY" | tr '/' '|')|latest|*dwarfs-$ARCH.AppImage.zsync"
 echo "Adding update information \"$UPINFO\" to runtime..."
 ./uruntime-lite --appimage-addupdinfo "$UPINFO"
 
@@ -91,6 +117,9 @@ zsyncmake *.AppImage -u *.AppImage
 
 # dolphin (the file manager) had to ruin the fun for everyone 😭
 UPINFO="gh-releases-zsync|$(echo "$GITHUB_REPOSITORY" | tr '/' '|')|latest|*squashfs-$ARCH.AppImage.zsync"
+if [ "$DEVEL" = 'true' ]; then
+#	UPINFO="$(echo "$UPINFO" | sed 's|latest|nightly|')"
+fi
 wget --retry-connrefused --tries=30 "$APPIMAGETOOL" -O ./appimagetool
 chmod +x ./appimagetool
 ./appimagetool --comp zstd \
