@@ -1,6 +1,6 @@
 #/bin/sh
 
-set -eu
+set -eux
 
 export APPIMAGE_EXTRACT_AND_RUN=1
 export ARCH="$(uname -m)"
@@ -11,7 +11,8 @@ ICON="https://github.com/dolphin-emu/dolphin/blob/master/Data/dolphin-emu.png?ra
 URUNTIME="https://github.com/VHSgunzo/uruntime/releases/latest/download/uruntime-appimage-dwarfs-$ARCH"
 
 # Prepare AppDir
-mkdir -p ./AppDir && cd ./AppDir
+mkdir -p ./AppDir
+cd ./AppDir
 
 echo '[Desktop Entry]
 Version=1.0
@@ -69,19 +70,20 @@ echo "$VERSION" > ~/version
 # MAKE APPIMAGE WITH URUNTIME
 cd ..
 wget --retry-connrefused --tries=30 "$URUNTIME" -O ./uruntime
-chmod +x ./uruntime
+wget --retry-connrefused --tries=30 "$URUNTIME_LITE" -O ./uruntime-lite
+chmod +x ./uruntime*
 
 #Add udpate info to runtime
 UPINFO="gh-releases-zsync|$(echo "$GITHUB_REPOSITORY" | tr '/' '|')|latest|*dwarfs-$ARCH.AppImage.zsync"
 echo "Adding update information \"$UPINFO\" to runtime..."
-./uruntime --appimage-addupdinfo "$UPINFO"
+./uruntime-lite --appimage-addupdinfo "$UPINFO"
 
 echo "Generating AppImage..."
 ./uruntime --appimage-mkdwarfs -f \
 	--set-owner 0 --set-group 0 \
 	--no-history --no-create-timestamp \
 	--compression zstd:level=22 -S26 -B8 \
-	--header uruntime \
+	--header uruntime-lite \
 	-i ./AppDir -o Dolphin_Emulator-"$VERSION"-anylinux.dwarfs-"$ARCH".AppImage
 
 echo "Generating zsync file..."
