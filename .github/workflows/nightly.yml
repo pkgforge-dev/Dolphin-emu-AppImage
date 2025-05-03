@@ -1,12 +1,12 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Sharun CI
+name: Sharun CI (Nightly)
 
 # Controls when the action will run. 
 on:
   # Build at 00:00 on every 12th day-of-month.
   schedule:
-    - cron: "0 0 */10 * *"
+    - cron: "0 0 */3 * *"
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
     branches: [ main ]
@@ -30,26 +30,10 @@ jobs:
       - name: Get dependencies
         run: chmod +x ./get-dependencies.sh && ./get-dependencies.sh
 
-      # Runs a set of commands using the runners shell
-      - name: Build Dolphin
-        run: |
-          git clone https://github.com/dolphin-emu/dolphin.git dolphin
-          ( cd dolphin && mkdir build && cd build
-            git submodule update --init --recursive
-            cmake .. -DLINUX_LOCAL_DEV=true -DCMAKE_POLICY_VERSION_MINIMUM=3.5
-            make -j $(nproc)
-            sudo make install
-            sudo cp -r ../Data/Sys /usr/local/bin
-            sudo cp -r ./Source/Core/DolphinQt /usr/local/bin
-          )
-
       - name: Make AppImage
         run: |
-          chmod +x ./dolphin-emu-appimage.sh 
-          ./dolphin-emu-appimage.sh
+          chmod +x ./dolphin-emu-appimage.sh  && ./dolphin-emu-appimage.sh
           mkdir dist
-          echo "$PWD"
-          ls .
           mv *.AppImage* dist/
 
       - name: Check version file
