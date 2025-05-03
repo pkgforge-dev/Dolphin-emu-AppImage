@@ -4,28 +4,28 @@ name: Sharun CI (Nightly)
 
 # Controls when the action will run. 
 on:
-  # Build at 00:00 on every 12th day-of-month.
   schedule:
-    - cron: "0 0 */3 * *"
-  # Triggers the workflow on push or pull request events but only for the master branch
-  push:
-    branches: [ main ]
-    paths-ignore: [ '**/README.md' ]
-  pull_request:
-    branches: [ main ]
-    paths-ignore: [ '**/README.md' ]
+    - cron: "0 7 1/3 * *"
+  workflow_dispatch: {}
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   build:
-    runs-on: ubuntu-latest
-    container: artixlinux/artixlinux:latest
+    name: "${{ matrix.name }} (${{ matrix.arch }})"
+    runs-on: ${{ matrix.runs-on }}
+    strategy:
+      matrix:
+        include:
+          - runs-on: ubuntu-latest
+            name: "Dolphin build"
+            arch: x86_64
+#          - runs-on: ubuntu-24.04-arm
+#            name: "Azahar build"
+#            arch: aarch64
+    container: ghcr.io/pkgforge-dev/archlinux:latest
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Get dependencies
         run: chmod +x ./get-dependencies.sh && ./get-dependencies.sh
