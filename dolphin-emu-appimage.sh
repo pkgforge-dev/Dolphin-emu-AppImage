@@ -117,10 +117,8 @@ echo "Generating zsync file..."
 zsyncmake *.AppImage -u *.AppImage
 
 # dolphin (the file manager) had to ruin the fun for everyone 😭
-UPINFO="gh-releases-zsync|$(echo "$GITHUB_REPOSITORY" | tr '/' '|')|latest|*squashfs-$ARCH.AppImage.zsync"
-if [ "$DEVEL" = 'true' ]; then
-#	UPINFO="$(echo "$UPINFO" | sed 's|latest|nightly|')"
-fi
+UPINFO="$(echo "$UPINFO" | sed 's|dwarfs|squashfs|')"
+
 wget --retry-connrefused --tries=30 "$APPIMAGETOOL" -O ./appimagetool
 chmod +x ./appimagetool
 ./appimagetool --comp zstd \
