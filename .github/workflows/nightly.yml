@@ -32,6 +32,7 @@ jobs:
 
       - name: Make AppImage
         run: |
+          export DEVEL=true
           chmod +x ./dolphin-emu-appimage.sh  && ./dolphin-emu-appimage.sh
           mkdir dist
           mv *.AppImage* dist/
