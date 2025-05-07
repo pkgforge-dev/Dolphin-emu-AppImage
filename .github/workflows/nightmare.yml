@@ -5,7 +5,7 @@
 # THIS FILE WAS KEPT AROUND TO SHOW HOW TERRIBLE IT IS TO BUILD ANYTHING ON DEBIAN/UBUNTU
 # It is not used anymore for plenty of reasons
 
-name: CI
+name: old-CI
 
 # Controls when the action will run. 
 on:
