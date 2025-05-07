@@ -19,7 +19,7 @@ jobs:
             name: "Dolphin build"
             arch: x86_64
 #          - runs-on: ubuntu-24.04-arm
-#            name: "Azahar build"
+#            name: "Dolphin build"
 #            arch: aarch64
     container: ghcr.io/pkgforge-dev/archlinux:latest
     steps:
