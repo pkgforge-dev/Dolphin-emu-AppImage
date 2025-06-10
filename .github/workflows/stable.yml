@@ -85,7 +85,7 @@ jobs:
             GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           continue-on-error: true
         - name: Continuous Releaser
-          uses: softprops/action-gh-release@v2
+          uses: softprops/action-gh-release@v2.2.2
           with:
             name: "Dolphin Emulator ${{ env.APP_VERSION }}"
             tag_name: "${{ env.APP_VERSION}}"
@@ -104,7 +104,7 @@ jobs:
             echo SNAPSHOT_TAG="${SNAPSHOT_TAG}" >> "${GITHUB_ENV}"
           continue-on-error: false
         - name: Snapshot Releaser
-          uses: softprops/action-gh-release@v2
+          uses: softprops/action-gh-release@v2.2.2
           with:
             name: "Snapshot ${{ env.APP_VERSION }}"
             tag_name: "${{ env.SNAPSHOT_TAG }}"
