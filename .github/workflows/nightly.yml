@@ -89,7 +89,7 @@ jobs:
           continue-on-error: true
 
         - name: Release nightly build
-          uses: softprops/action-gh-release@v2
+          uses: softprops/action-gh-release@v2.2.2
           with:
             name: "Nightly Build (${{ env.SNAPSHOT_TAG }})"
             tag_name: "nightly"
