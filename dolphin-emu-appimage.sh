@@ -6,7 +6,6 @@ export APPIMAGE_EXTRACT_AND_RUN=1
 export ARCH="$(uname -m)"
 APPIMAGETOOL="https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-$ARCH.AppImage"
 LIB4BN="https://raw.githubusercontent.com/VHSgunzo/sharun/refs/heads/main/lib4bin"
-GRON="https://raw.githubusercontent.com/xonixx/gron.awk/refs/heads/main/gron.awk"
 ICON="https://github.com/dolphin-emu/dolphin/blob/master/Data/dolphin-emu.png?raw=true"
 URUNTIME="https://github.com/VHSgunzo/uruntime/releases/latest/download/uruntime-appimage-dwarfs-$ARCH"
 URUNTIME_LITE="https://github.com/VHSgunzo/uruntime/releases/latest/download/uruntime-appimage-dwarfs-lite-$ARCH"
@@ -21,10 +20,10 @@ if [ "$DEVEL" = 'true' ]; then
 	git clone "$REPO" ./dolphin
 else
 	echo "Making stable build of dolphin-emu..."
-	wget "$GRON" -O ./gron.awk
-	chmod +x ./gron.awk
-	VERSION=$(wget https://api.github.com/repos/dolphin-emu/dolphin/tags -O - \
-		| ./gron.awk | grep -v "nJoy" |awk -F'=|"' '/name/ {print $3; exit}')
+	VERSION=$(wget https://api.github.com/repos/dolphin-emu/dolphin/tags -O - | \
+		grep '"name":' | grep -v "nJoy" | \
+		sed -E 's/.*"name": "([^"]+)".*/\1/' | \
+		sort -V -r | head -1)
 	git clone --branch "$VERSION" --single-branch "$REPO" ./dolphin
 fi
 echo "$VERSION" > ~/version
