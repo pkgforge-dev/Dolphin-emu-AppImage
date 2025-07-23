@@ -23,8 +23,9 @@ else
 	echo "Making stable build of dolphin-emu..."
 	wget "$GRON" -O ./gron.awk
 	chmod +x ./gron.awk
-	VERSION=$(wget https://api.github.com/repos/dolphin-emu/dolphin/tags -O - \
-		| ./gron.awk | grep -v "nJoy" |awk -F'=|"' '/name/ {print $3; exit}')
+	VERSION=$(wget https://api.github.com/repos/dolphin-emu/dolphin/tags -O - | \
+		./gron.awk | grep -v "nJoy" | awk -F'=|"' '/name/ {print $3}' | \
+		sort -V -r | head -1)
 	git clone --branch "$VERSION" --single-branch "$REPO" ./dolphin
 fi
 echo "$VERSION" > ~/version
