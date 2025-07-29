@@ -97,6 +97,11 @@ cp -rv /usr/local/bin/Sys ./bin/Sys
 ln ./sharun ./AppRun
 ./sharun -g
 
+# Force C locale due to issues with gconv causing crashes
+# See https://github.com/pkgforge-dev/Dolphin-emu-AppImage/issues/28
+# This is a hack but since dolphin provides internal translations, it isn't a big deal
+echo 'LC_ALL=C' >> ./.env
+
 # MAKE APPIMAGE WITH URUNTIME
 cd ..
 wget --retry-connrefused --tries=30 "$URUNTIME" -O ./uruntime
