@@ -2,16 +2,10 @@
 
 set -ex
 
+REPO="https://github.com/dolphin-emu/dolphin.git"
+GRON="https://raw.githubusercontent.com/xonixx/gron.awk/refs/heads/main/gron.awk"
 export APPIMAGE_EXTRACT_AND_RUN=1
 export ARCH="$(uname -m)"
-APPIMAGETOOL="https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-$ARCH.AppImage"
-LIB4BN="https://raw.githubusercontent.com/VHSgunzo/sharun/refs/heads/main/lib4bin"
-GRON="https://raw.githubusercontent.com/xonixx/gron.awk/refs/heads/main/gron.awk"
-ICON="https://github.com/dolphin-emu/dolphin/blob/master/Data/dolphin-emu.png?raw=true"
-URUNTIME="https://github.com/VHSgunzo/uruntime/releases/latest/download/uruntime-appimage-dwarfs-$ARCH"
-URUNTIME_LITE="https://github.com/VHSgunzo/uruntime/releases/latest/download/uruntime-appimage-dwarfs-lite-$ARCH"
-UPINFO="gh-releases-zsync|$(echo "$GITHUB_REPOSITORY" | tr '/' '|')|latest|*dwarfs-$ARCH.AppImage.zsync"
-REPO="https://github.com/dolphin-emu/dolphin.git"
 
 # Determine to build nightly or stable
 if [ "$DEVEL" = 'true' ]; then
@@ -28,7 +22,6 @@ else
 		sort -V -r | head -1)
 	git clone --branch "$VERSION" --single-branch "$REPO" ./dolphin
 fi
-echo "$VERSION" > ~/version
 
 # BUILD DOLPHIN
 (
@@ -45,9 +38,24 @@ echo "$VERSION" > ~/version
 	sudo cp -r ./Source/Core/DolphinQt /usr/local/bin
   )
 
-# Prepare AppDir
-mkdir -p ./AppDir
-cd ./AppDir
+# Deploy AppImage
+[ -n "$VERSION" ] && echo "$VERSION" > ~/version
+APPIMAGETOOL="https://github.com/pkgforge-dev/appimagetool-uruntime/releases/download/continuous/appimagetool-$ARCH.AppImage"
+URUNTIME="https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImages/refs/heads/main/useful-tools/uruntime2appimage.sh"
+SHARUN="https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImages/refs/heads/main/useful-tools/quick-sharun.sh"
+
+export ADD_HOOKS="self-updater.bg.hook"
+export UPINFO="gh-releases-zsync|${GITHUB_REPOSITORY%/*}|${GITHUB_REPOSITORY#*/}|latest|*dwarfs-$ARCH.AppImage.zsync"
+export OUTNAME=Dolphin_Emulator-"$VERSION"-anylinux.dwarfs-"$ARCH".AppImage
+export ICON=/usr/local/share/icons/hicolor/256x256/apps/dolphin-emu.png
+export DEPLOY_OPENGL=1 
+export DEPLOY_VULKAN=1 
+export DEPLOY_PIPEWIRE=1
+
+# Bundle all libs
+wget --retry-connrefused --tries=30 "$SHARUN" -O ./quick-sharun
+chmod +x ./quick-sharun
+./quick-sharun /usr/local/bin/dolphin-*
 
 echo '[Desktop Entry]
 Version=1.0
@@ -59,77 +67,30 @@ Categories=Game;Emulator;
 Name=Dolphin Emulator
 GenericName=Wii/GameCube Emulator
 StartupWMClass=dolphin-emu
-Comment=A Wii/GameCube Emulator' > ./dolphin-emu.desktop
-
-cp -v /usr/local/share/icons/hicolor/256x256/apps/dolphin-emu.png  ./
-cp -v /usr/local/share/icons/hicolor/256x256/apps/dolphin-emu.png  ./.DirIcon
-
-# Bundle all libs
-wget --retry-connrefused --tries=30 "$LIB4BN" -O ./lib4bin
-chmod +x ./lib4bin
-xvfb-run -a -- ./lib4bin -p -v -e -s -k \
-	/usr/local/bin/dolphin-* \
-	/usr/lib/gconv/* \
-	/usr/lib/libGLX* \
-	/usr/lib/libEGL* \
-	/usr/lib/dri/* \
-	/usr/lib/libvulkan* \
-	/usr/lib/qt6/plugins/iconengines/* \
-	/usr/lib/qt6/plugins/imageformats/* \
-	/usr/lib/qt6/plugins/platforms/* \
-	/usr/lib/qt6/plugins/platformthemes/* \
-	/usr/lib/qt6/plugins/styles/* \
-	/usr/lib/qt6/plugins/xcbglintegrations/* \
-	/usr/lib/qt6/plugins/wayland-*/* \
-	/usr/lib/pipewire-0.3/* \
-	/usr/lib/spa-0.2/*/* \
-	/usr/lib/alsa-lib/*
+Comment=A Wii/GameCube Emulator' > ./AppDir/dolphin-emu.desktop
 
 # copy locales, the dolphin binary expects them here
-mkdir -p ./Source/Core
-cp -r /usr/local/bin/DolphinQt ./Source/Core
-find ./Source/Core/DolphinQt -type f ! -name 'dolphin-emu.mo' -delete
+mkdir -p ./AppDir/Source/Core
+cp -r /usr/local/bin/DolphinQt ./AppDir/Source/Core
+find ./AppDir/Source/Core/DolphinQt -type f ! -name 'dolphin-emu.mo' -delete
 
 # when compiled portable this directory needs a capital S
-cp -rv /usr/local/bin/Sys ./bin/Sys
-
-# Prepare sharun
-ln ./sharun ./AppRun
-./sharun -g
+cp -rv /usr/local/bin/Sys ./AppDir/bin/Sys
 
 # Force C locale due to issues with gconv causing crashes
 # See https://github.com/pkgforge-dev/Dolphin-emu-AppImage/issues/28
 # This is a hack but since dolphin provides internal translations, it isn't a big deal
-echo 'LC_ALL=C' >> ./.env
+echo 'LC_ALL=C' >> ./AppDir/.env
 
 # MAKE APPIMAGE WITH URUNTIME
-cd ..
-wget --retry-connrefused --tries=30 "$URUNTIME" -O ./uruntime
-wget --retry-connrefused --tries=30 "$URUNTIME_LITE" -O ./uruntime-lite
-chmod +x ./uruntime*
-
-#Add udpate info to runtime
-echo "Adding update information \"$UPINFO\" to runtime..."
-./uruntime-lite --appimage-addupdinfo "$UPINFO"
-
-echo "Generating AppImage..."
-./uruntime --appimage-mkdwarfs -f \
-	--set-owner 0 --set-group 0 \
-	--no-history --no-create-timestamp \
-	--compression zstd:level=22 -S26 -B8 \
-	--header uruntime-lite \
-	-i ./AppDir -o Dolphin_Emulator-"$VERSION"-anylinux.dwarfs-"$ARCH".AppImage
-
-echo "Generating zsync file..."
-zsyncmake *.AppImage -u *.AppImage
+wget --retry-connrefused --tries=30 "$URUNTIME" -O ./uruntime2appimage
+chmod +x ./uruntime2appimage
+./uruntime2appimage
 
 # dolphin (the file manager) had to ruin the fun for everyone 😭
 UPINFO="$(echo "$UPINFO" | sed 's|dwarfs|squashfs|')"
-
 wget --retry-connrefused --tries=30 "$APPIMAGETOOL" -O ./appimagetool
 chmod +x ./appimagetool
-./appimagetool --comp zstd \
-	--mksquashfs-opt -Xcompression-level --mksquashfs-opt 22 \
-	-n -u "$UPINFO" "$PWD"/AppDir "$PWD"/Dolphin_Emulator-"$VERSION"-anylinux.squashfs-"$ARCH".AppImage
+./appimagetool -n -u "$UPINFO" "$PWD"/AppDir "$PWD"/Dolphin_Emulator-"$VERSION"-anylinux.squashfs-"$ARCH".AppImage
 
 echo "All Done!"
