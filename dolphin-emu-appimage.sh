@@ -47,7 +47,6 @@ SHARUN="https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImages/refs/h
 export ADD_HOOKS="self-updater.bg.hook"
 export UPINFO="gh-releases-zsync|${GITHUB_REPOSITORY%/*}|${GITHUB_REPOSITORY#*/}|latest|*dwarfs-$ARCH.AppImage.zsync"
 export OUTNAME=Dolphin_Emulator-"$VERSION"-anylinux.dwarfs-"$ARCH".AppImage
-export ICON=/usr/local/share/icons/hicolor/256x256/apps/dolphin-emu.png
 export DEPLOY_OPENGL=1 
 export DEPLOY_VULKAN=1 
 export DEPLOY_PIPEWIRE=1
@@ -56,18 +55,6 @@ export DEPLOY_PIPEWIRE=1
 wget --retry-connrefused --tries=30 "$SHARUN" -O ./quick-sharun
 chmod +x ./quick-sharun
 ./quick-sharun /usr/local/bin/dolphin-*
-
-echo '[Desktop Entry]
-Version=1.0
-Icon=dolphin-emu
-Exec=dolphin-emu
-Terminal=false
-Type=Application
-Categories=Game;Emulator;
-Name=Dolphin Emulator
-GenericName=Wii/GameCube Emulator
-StartupWMClass=dolphin-emu
-Comment=A Wii/GameCube Emulator' > ./AppDir/dolphin-emu.desktop
 
 # copy locales, the dolphin binary expects them here
 mkdir -p ./AppDir/Source/Core
