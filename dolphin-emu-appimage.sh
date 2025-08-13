@@ -69,6 +69,17 @@ cp -rv /usr/local/bin/Sys ./AppDir/bin/Sys
 # This is a hack but since dolphin provides internal translations, it isn't a big deal
 echo 'LC_ALL=C' >> ./AppDir/.env
 
+# differentiate between nightly builds
+if [ "$DEVEL" = 'true' ]; then
+	sed -i 's|Name=Dolphin Emulator|Name=Dolphin Emulator Nightly|' ./AppDir/*.desktop
+	UPINFO="$(echo "$UPINFO" | sed 's|latest|nightly|')"
+fi
+
+# allow the host vulkan to be used for aarch64 given the sad situation
+if [ "$ARCH" = 'aarch64' ]; then
+	echo 'SHARUN_ALLOW_SYS_VKICD=1' >> ./AppDir/.env
+fi
+
 # MAKE APPIMAGE WITH URUNTIME
 wget --retry-connrefused --tries=30 "$URUNTIME" -O ./uruntime2appimage
 chmod +x ./uruntime2appimage
