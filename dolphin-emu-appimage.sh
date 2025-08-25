@@ -52,4 +52,7 @@ wget --retry-connrefused --tries=30 "$APPIMAGETOOL" -O ./appimagetool
 chmod +x ./appimagetool
 ./appimagetool -n -u "$UPINFO" "$PWD"/AppDir "$PWD"/Dolphin_Emulator-"$VERSION"-anylinux.squashfs-"$ARCH".AppImage
 
+mkdir -p ./dist
+mv -v ./*.AppImage*  ./dist
+mv -v ~/version      ./dist
 echo "All Done!"
