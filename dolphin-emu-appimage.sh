@@ -21,7 +21,7 @@ export DEPLOY_PIPEWIRE=1
 # Bundle all libs
 wget --retry-connrefused --tries=30 "$SHARUN" -O ./quick-sharun
 chmod +x ./quick-sharun
-./quick-sharun /usr/local/bin/dolphin-*
+./quick-sharun /usr/bin/dolphin-*
 
 # Force C locale due to issues with gconv causing crashes
 # See https://github.com/pkgforge-dev/Dolphin-emu-AppImage/issues/28
