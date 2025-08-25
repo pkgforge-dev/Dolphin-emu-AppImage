@@ -73,6 +73,8 @@ cmake .. \
 	-DDISTRIBUTOR=pkgforge-dev   \
 	-DCMAKE_INSTALL_PREFIX=/usr  \
     -DENABLE_ANALYTICS=OFF       \
+	-DENABLE_LLVM=OFF            \
+	-DUSE_DISCORD_PRESENCE=OFF   \
     -DENABLE_AUTOUPDATE=OFF      \
 	-DCMAKE_POLICY_VERSION_MINIMUM=3.5
 make -j $(nproc)
