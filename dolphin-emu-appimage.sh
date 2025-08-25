@@ -19,16 +19,12 @@ export DEPLOY_LOCALE=1
 export DEPLOY_OPENGL=1 
 export DEPLOY_VULKAN=1 
 export DEPLOY_PIPEWIRE=1
+export LOCALE_FIX=1
 
 # Bundle all libs
 wget --retry-connrefused --tries=30 "$SHARUN" -O ./quick-sharun
 chmod +x ./quick-sharun
 ./quick-sharun /usr/bin/dolphin-*
-
-# Force C locale due to issues with gconv causing crashes
-# See https://github.com/pkgforge-dev/Dolphin-emu-AppImage/issues/28
-# This is a hack but since dolphin provides internal translations, it isn't a big deal
-echo 'LC_ALL=C' >> ./AppDir/.env
 
 # differentiate between nightly builds
 if [ "$DEVEL" = 'true' ]; then
