@@ -27,7 +27,6 @@ pacman -Syu --noconfirm \
 	qt6ct            \
 	sdl2             \
 	speexdsp         \
-	strace           \
 	vulkan-headers   \
 	wget             \
 	xcb-util-cursor  \
@@ -63,12 +62,18 @@ else
 		sort -V -r | head -1)
 	git clone --branch "$VERSION" --single-branch "$REPO" ./dolphin
 fi
+echo "$VERSION" > ~/version
 
 # BUILD DOLPHIN
 cd ./dolphin 
 mkdir ./build 
 cd ./build
 git submodule update --init --recursive
-cmake .. -DLINUX_LOCAL_DEV=true -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+cmake .. \
+	-DDISTRIBUTOR=pkgforge-dev   \
+	-DCMAKE_INSTALL_PREFIX=/usr  \
+    -DENABLE_ANALYTICS=OFF       \
+    -DENABLE_AUTOUPDATE=OFF      \
+	-DCMAKE_POLICY_VERSION_MINIMUM=3.5
 make -j $(nproc)
 sudo make install
