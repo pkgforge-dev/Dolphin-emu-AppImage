@@ -14,6 +14,7 @@ pacman -Syu --noconfirm \
 	enet             \
 	git              \
 	hidapi           \
+	kvantum          \
 	libusb           \
 	libx11           \
 	libxi            \
