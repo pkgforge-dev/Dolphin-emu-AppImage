@@ -38,9 +38,6 @@ pacman -Syu --noconfirm \
 	zstd             \
 	zsync
 
-# kvantum incorrectly depends on kwindowsystem
-pacman -Rsndd --noconfirm kwindowsystem
-
 echo "Installing debloated packages..."
 echo "---------------------------------------------------------------"
 wget --retry-connrefused --tries=30 "$EXTRA_PACKAGES" -O ./get-debloated-pkgs.sh
