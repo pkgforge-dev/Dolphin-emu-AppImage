@@ -14,6 +14,7 @@ pacman -Syu --noconfirm \
 	enet             \
 	git              \
 	hidapi           \
+	kvantum          \
 	libusb           \
 	libx11           \
 	libxi            \
@@ -25,6 +26,7 @@ pacman -Syu --noconfirm \
 	pulseaudio       \
 	pulseaudio-alsa  \
 	qt6ct            \
+	qt6-wayland      \
 	sdl2             \
 	speexdsp         \
 	vulkan-headers   \
