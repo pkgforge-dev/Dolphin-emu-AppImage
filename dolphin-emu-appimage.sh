@@ -14,7 +14,6 @@ SHARUN="https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImages/refs/h
 export ADD_HOOKS="self-updater.bg.hook"
 export UPINFO="gh-releases-zsync|${GITHUB_REPOSITORY%/*}|${GITHUB_REPOSITORY#*/}|latest|*dwarfs-$ARCH.AppImage.zsync"
 export OUTNAME=Dolphin_Emulator-"$VERSION"-anylinux.dwarfs-"$ARCH".AppImage
-export PATH_MAPPING_RELATIVE=1 # Dolphin is hardcoded to /urs/share
 export DEPLOY_LOCALE=1
 export DEPLOY_OPENGL=1 
 export DEPLOY_VULKAN=1 
