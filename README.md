@@ -9,12 +9,6 @@ Unofficial AppImage of the Dolphin Emulator.
 
 * [Latest Nightly Release](https://github.com/pkgforge-dev/Dolphin-emu-AppImage/releases/tag/nightly)
 
-# READ THIS IF YOU HAVE ISSUES
-
-If you are on wayland (specially GNOME wayland) and get freezes or crahes you are likely affected by this issue that affects all Qt6 apps: https://github.com/pkgforge-dev/Citron-AppImage/issues/50
-
-To fix it simply set the env variable `QT_QPA_PLATFORM=xcb`
-
 ---
 
 <br> Dolphin emu is a Nintendo Game Cube and Wii emulator, it allows the computer gammers enjoy both Consoles in the computer with the capability of 1080p <br/>
