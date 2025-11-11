@@ -23,7 +23,7 @@ jobs:
             arch: aarch64
     container: ghcr.io/pkgforge-dev/archlinux:latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Get dependencies
         run: chmod +x ./get-dependencies.sh && DEVEL=true ./get-dependencies.sh
