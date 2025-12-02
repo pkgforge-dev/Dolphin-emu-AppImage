@@ -68,6 +68,11 @@ echo "$VERSION" > ~/version
 
 # BUILD DOLPHIN
 cd ./dolphin 
+
+# HACK
+qpaheader=$(find /usr/include -type f -name 'qplatformnativeinterface.h' -print -quit)
+sed -i "s|#include <qpa/qplatformnativeinterface.h>|#include <$qpaheader>|" ./Source/Core/DolphinQt/MainWindow.cpp
+
 mkdir ./build 
 cd ./build
 git submodule update --init --recursive
