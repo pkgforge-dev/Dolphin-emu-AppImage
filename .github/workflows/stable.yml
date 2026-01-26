@@ -1,11 +1,10 @@
-# This is a basic workflow to help you get started with Actions
-
-name: AppImage (Stable)
-
-# Controls when the action will run. 
+name: Anylinux-AppImage
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
 on:
   schedule:
-    - cron: "0 7 1/14 * *"
+    - cron: "0 7 1/21 * *" # We default to rebuilding every 21 days, change this to your liking
   workflow_dispatch: {}
 
 jobs:
@@ -18,60 +17,34 @@ jobs:
           - runs-on: ubuntu-latest
             name: Build AppImage
             arch: x86_64
+          # comment out these 3 lines if aarch64 is not wanted
           - runs-on: ubuntu-24.04-arm
             name: Build AppImage
             arch: aarch64
     container: ghcr.io/pkgforge-dev/archlinux:latest
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Get dependencies
-        run: chmod +x ./get-dependencies.sh && ./get-dependencies.sh
-
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Preparing Container
+        uses: pkgforge-dev/anylinux-setup-action@8872fabe63f9a00b35e25b2f46da62a05afc9a7d # v1
+      - name: Install Dependencies
+        run: /bin/sh ./get-dependencies.sh
       - name: Make AppImage
-        run: chmod +x ./*-appimage.sh && ./*-appimage.sh
-
+        run: /bin/sh ./make-appimage.sh
       - name: Upload artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: AppImage-${{ matrix.arch }}
           path: dist
-    
+
   release:
     if: ${{ github.ref_name == 'main' }}
     needs: [build]
     permissions: write-all
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v4.3.0
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
           pattern: AppImage-*
           merge-multiple: true
-
-      - name: Read version and Get date
-        run: |
-          cat ./version
-          echo "VERSION=$(cat ./version)" >> "${GITHUB_ENV}"
-          echo "DATE=$(date +'%Y-%m-%d_%s')" >> "${GITHUB_ENV}"
-
-      - name: Release Artifacts
-        uses: softprops/action-gh-release@v2.2.2
-        with:
-          name: "Dolphin Emulator: ${{ env.VERSION }}"
-          tag_name: "${{ env.VERSION }}@${{ env.DATE }}"
-          prerelease: false
-          draft: false
-          generate_release_notes: false
-          make_latest: true
-          files: |
-            *.AppImage*
-
-      - uses: actions/checkout@v4
-      - name: Update LATEST_VERSION
-        run: |
-          echo "${{ env.VERSION }}" > ./LATEST_VERSION
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add ./LATEST_VERSION
-          git commit --allow-empty -m 'bump `LATEST_VERSION` [skip ci]'
-          git push
+      - name: Release AppImage
+        uses: pkgforge-dev/make-stable-appimage-release@4ed3d48ccb065352b6e6c0db6d39885b201c54a0 #v1.1
