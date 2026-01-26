@@ -40,10 +40,9 @@ REPO="https://github.com/dolphin-emu/dolphin.git"
 GRON="https://raw.githubusercontent.com/xonixx/gron.awk/refs/heads/main/gron.awk"
 
 # Determine to build nightly or stable
-if [ "${DEVEL-}" = 1 ]; then
+if [ "${DEVEL_RELEASE-}" = 1 ]; then
 	echo "Making nightly build of dolphin-emu..."
 	VERSION="$(git ls-remote "$REPO" HEAD | cut -c 1-9 | head -1)"
-	UPINFO="$(echo "$UPINFO" | sed 's|latest|nightly|')"
 	git clone "$REPO" ./dolphin
 else
 	echo "Making stable build of dolphin-emu..."
