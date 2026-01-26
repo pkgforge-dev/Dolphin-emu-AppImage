@@ -1,4 +1,4 @@
-name: Anylinux-AppImage
+name: Anylinux-AppImage (Nightly)
 concurrency:
   group: build-${{ github.ref }}
   cancel-in-progress: true
