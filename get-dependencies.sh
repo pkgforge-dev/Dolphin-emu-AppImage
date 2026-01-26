@@ -1,48 +1,35 @@
 #!/bin/sh
 
-set -ex
-EXTRA_PACKAGES="https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImages/refs/heads/main/useful-tools/get-debloated-pkgs.sh"
+set -eu
 
-echo "Installing build dependencies..."
+echo "Installing package dependencies..."
 echo "---------------------------------------------------------------"
 pacman -Syu --noconfirm \
 	base-devel       \
 	bluez-libs       \
 	bzip2            \
 	cmake            \
-	curl             \
 	enet             \
-	git              \
 	hidapi           \
 	kvantum          \
 	libusb           \
-	libx11           \
-	libxi            \
-	libxrandr        \
 	lz4              \
 	lzo              \
 	mesa             \
 	pipewire-audio   \
-	pulseaudio       \
-	pulseaudio-alsa  \
+	pipeiwre-jack    \
 	qt6ct            \
 	qt6-wayland      \
 	sdl2             \
 	speexdsp         \
 	vulkan-headers   \
-	wget             \
 	xcb-util-cursor  \
-	xorg-server-xvfb \
 	xxhash           \
-	xz               \
-	zstd             \
-	zsync
+	xz
 
 echo "Installing debloated packages..."
 echo "---------------------------------------------------------------"
-wget --retry-connrefused --tries=30 "$EXTRA_PACKAGES" -O ./get-debloated-pkgs.sh
-chmod +x ./get-debloated-pkgs.sh
-./get-debloated-pkgs.sh --add-mesa llvm-libs-nano libxml2-mini qt6-base-mini opus-mini
+get-debloated-pkgs --add-common ! gtk3
 
 echo "Building dolphin..."
 echo "---------------------------------------------------------------"
