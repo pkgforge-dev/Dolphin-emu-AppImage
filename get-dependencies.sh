@@ -17,7 +17,7 @@ pacman -Syu --noconfirm \
 	lzo              \
 	mesa             \
 	pipewire-audio   \
-	pipeiwre-jack    \
+	pipewire-jack    \
 	qt6ct            \
 	qt6-wayland      \
 	sdl2             \
