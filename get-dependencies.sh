@@ -31,6 +31,9 @@ echo "Installing debloated packages..."
 echo "---------------------------------------------------------------"
 get-debloated-pkgs --add-common ! gtk3
 
+# Comment this out if you need an AUR package
+#make-aur-package PACKAGENAME
+
 echo "Building dolphin..."
 echo "---------------------------------------------------------------"
 REPO="https://github.com/dolphin-emu/dolphin.git"
