@@ -46,5 +46,10 @@ jobs:
         with:
           pattern: AppImage-*
           merge-multiple: true
+      - name: Del Previous Release
+        run: gh release delete "nightly" --repo "${GITHUB_REPOSITORY}" --cleanup-tag -y && sleep 5
+        env:
+          GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        continue-on-error: true
       - name: Release AppImage
         uses: pkgforge-dev/make-nightly-appimage-release@v1.0
