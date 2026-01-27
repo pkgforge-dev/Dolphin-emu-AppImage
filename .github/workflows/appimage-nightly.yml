@@ -47,4 +47,4 @@ jobs:
           pattern: AppImage-*
           merge-multiple: true
       - name: Release AppImage
-        uses: pkgforge-dev/make-nightly-appimage-release@v1.1
+        uses: pkgforge-dev/make-nightly-appimage-release@v1.0
