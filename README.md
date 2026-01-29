@@ -13,7 +13,7 @@
 
 | Latest Stable Release | Latest Nightly Relase | Upstream URL |
 | :---: | :---: | :---: |
-| [Click here](https://github.com/pkgforge-dev/Dolphin-emu-AppImage/releases/latest) | [Click here](https://github.com/pkgforge-dev/Dolphin-emu-AppImage/releases/tag/nightly) | [Click here](https://github.com/pkgforge-dev/Anylinux-AppImages) |
+| [Click here](https://github.com/pkgforge-dev/Dolphin-emu-AppImage/releases/latest) | [Click here](https://github.com/pkgforge-dev/Dolphin-emu-AppImage/releases/tag/nightly) | [Click here](https://github.com/dolphin-emu/dolphin) |
 
 </div>
 
