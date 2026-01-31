@@ -20,7 +20,7 @@ pacman -Syu --noconfirm \
 	pipewire-jack    \
 	qt6ct            \
 	qt6-wayland      \
-	sdl2             \
+	sdl3             \
 	speexdsp         \
 	vulkan-headers   \
 	xcb-util-cursor  \
@@ -72,7 +72,6 @@ cmake .. \
 	-DENABLE_LLVM=OFF            \
 	-DUSE_DISCORD_PRESENCE=OFF   \
     -DENABLE_AUTOUPDATE=OFF      \
-	-DENCODE_FRAMEDUMPS=OFF      \
-	-DCMAKE_POLICY_VERSION_MINIMUM=3.5
+	-DENCODE_FRAMEDUMPS=OFF
 make -j $(nproc)
 sudo make install
