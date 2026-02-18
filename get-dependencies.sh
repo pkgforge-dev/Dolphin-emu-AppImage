@@ -32,7 +32,7 @@ echo "---------------------------------------------------------------"
 get-debloated-pkgs --add-common ! gtk3
 
 # Comment this out if you need an AUR package
-#make-aur-package PACKAGENAME
+make-aur-package vulkan-terakan-git
 
 echo "Building dolphin..."
 echo "---------------------------------------------------------------"
