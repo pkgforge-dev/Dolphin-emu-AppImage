@@ -32,7 +32,9 @@ echo "---------------------------------------------------------------"
 get-debloated-pkgs --add-common ! gtk3
 
 # Comment this out if you need an AUR package
-make-aur-package vulkan-terakan-git
+if [ "$ARCH" = 'x86_64' ]; then
+	make-aur-package vulkan-terakan-git
+fi
 
 echo "Building dolphin..."
 echo "---------------------------------------------------------------"
