@@ -15,6 +15,7 @@ pacman -Syu --noconfirm \
 	libusb           \
 	lz4              \
 	lzo              \
+	lxqt-qtplugin    \
 	mesa             \
 	pipewire-audio   \
 	pipewire-jack    \
