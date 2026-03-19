@@ -37,42 +37,30 @@ get-debloated-pkgs --add-common ! gtk3
 
 echo "Building dolphin..."
 echo "---------------------------------------------------------------"
-REPO="https://github.com/dolphin-emu/dolphin.git"
-GRON="https://raw.githubusercontent.com/xonixx/gron.awk/refs/heads/main/gron.awk"
+git clone https://github.com/dolphin-emu/dolphin.git ./dolphin
+cd ./dolphin
 
 # Determine to build nightly or stable
 if [ "${DEVEL_RELEASE-}" = 1 ]; then
-	echo "Making nightly build of dolphin-emu..."
-	VERSION="$(git ls-remote "$REPO" HEAD | cut -c 1-9 | head -1)"
-	git clone "$REPO" ./dolphin
+	git rev-parse --short HEAD > ~/version
 else
-	echo "Making stable build of dolphin-emu..."
-	wget "$GRON" -O ./gron.awk
-	chmod +x ./gron.awk
-	VERSION=$(wget https://api.github.com/repos/dolphin-emu/dolphin/tags -O - | \
-		./gron.awk | grep -v "nJoy" | awk -F'=|"' '/name/ {print $3}' | \
-		sort -V -r | head -1)
-	git clone --branch "$VERSION" --single-branch "$REPO" ./dolphin
+	git fetch --tags origin
+	TAG=$(git tag --sort=-v:refname | grep -vi 'rc\|alpha\|nJoy' | head -1)
+	git checkout "$TAG"
+	echo "$TAG" > ~/version
 fi
-echo "$VERSION" > ~/version
 
 # BUILD DOLPHIN
-cd ./dolphin 
-
-# HACK
-qpaheader=$(find /usr/include -type f -name 'qplatformnativeinterface.h' -print -quit)
-sed -i "s|#include <qpa/qplatformnativeinterface.h>|#include <$qpaheader>|" ./Source/Core/DolphinQt/MainWindow.cpp
-
-mkdir ./build 
+mkdir ./build
 cd ./build
 git submodule update --init --recursive
 cmake .. \
 	-DDISTRIBUTOR=pkgforge-dev   \
 	-DCMAKE_INSTALL_PREFIX=/usr  \
-    -DENABLE_ANALYTICS=OFF       \
+	-DENABLE_ANALYTICS=OFF       \
 	-DENABLE_LLVM=OFF            \
 	-DUSE_DISCORD_PRESENCE=OFF   \
-    -DENABLE_AUTOUPDATE=OFF      \
+	-DENABLE_AUTOUPDATE=OFF      \
 	-DENCODE_FRAMEDUMPS=OFF
-make -j $(nproc)
+make -j$(nproc)
 sudo make install
