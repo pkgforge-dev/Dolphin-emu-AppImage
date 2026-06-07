@@ -14,7 +14,7 @@ export DEPLOY_PIPEWIRE=1
 export ANYLINUX_LIB=1
 
 # Deploy dependencies
-quick-sharun /usr/bin/dolphin-*
+quick-sharun /usr/bin/dolphin-* /usr/lib/libnss_mdns*_minimal.so*
 
 # Additional changes can be done in between here
 
