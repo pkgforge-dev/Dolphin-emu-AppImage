@@ -44,6 +44,3 @@ More at: [AnyLinux-AppImages](https://pkgforge-dev.github.io/Anylinux-AppImages/
 
 Thank you for sharing this project across the internet!
 If you like it don't forget to give a star!
-
-# Telegram Group 
-<h1>https://t.me/appimagelucasmz1<h1/>
