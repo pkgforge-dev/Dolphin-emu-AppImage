@@ -18,7 +18,6 @@ pacman -Syu --noconfirm \
 	lxqt-qtplugin    \
 	mesa             \
 	qt6ct            \
-	qt6-wayland      \
 	sdl3             \
 	speexdsp         \
 	vulkan-headers   \
