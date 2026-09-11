@@ -25,7 +25,7 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Preparing Container
-        uses: pkgforge-dev/anylinux-setup-action@0964f2258d6c93d1391359978dde081fd8b3c6af # v2
+        uses: pkgforge-dev/anylinux-setup-action@7278cbb7c3692fce7241d427614ef7984192f138 # v3
       - name: Install Dependencies
         run: /bin/sh ./get-dependencies.sh
       - name: Make AppImage
